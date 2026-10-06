@@ -1,0 +1,18 @@
+{
+  "name": "@cutout/agent",
+  "tasks": {
+    "setup": "brew bundle"
+  },
+  "exports": {
+    ".": "./app/run.ts",
+    "./tools": "./libraries/tools/module.ts",
+    "./tasks": "./libraries/tasks/module.ts",
+    "./processes": "./libraries/processes/module.ts"
+  },
+  "imports": {
+    "@std/cli/spinner": "jsr:@std/cli/unstable-spinner",
+    "@std/streams": "jsr:@std/streams",
+    "@std/dotenv": "jsr:@std/dotenv",
+    "@cutout/jsx": "jsr:@cutout/jsx"
+  }
+}
