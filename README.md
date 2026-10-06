@@ -4,7 +4,7 @@
 > This is an experimental Apple Silicon-only agent. Run at your own discretion.
 
 ```sh
-deno task --cwd=experimental/agent setup
+deno task setup
 deno run -P @cutout/agent
 ```
 
