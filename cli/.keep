@@ -1,0 +1,67 @@
+- if no delegations configured, error
+- spawn server if not active
+- if --ui/--browser/--web, open browser ui (later)
+- `--continue (session name)` to continue other inactive session (later)
+- intro/license header, ENTER to continue
+- begin downloading judging model in background if not exist
+- open template .jsx file in $EDITOR with commented-out instructions.
+
+```jsx
+import { prompt, without } from "@cutout/agent/prompting";
+
+export default (
+  <prompt model="mlx-community/Qwen3.6">
+    Look this up for me.
+    <without>Search Tools</without>
+  </prompt>
+);
+```
+
+- on submit - if judging is in progress, show model downloading
+  - once model downloaded, log scoring info
+- if a qualifying delegation is found, execute delegation if working model is downloaded. this is saved to file with path shown at top, incl. delegation info
+- press ENTER to begin next prompt
+
+@cutout/store wraps ~/.cutout/agent/store
+
+- potential other commands:
+  - open all documents in current history (how?)
+  - interrupt (also ENTER?)
+    - this will re-open the previous md file for further editing
+  - hide editor to re-show previous result (ESC? or get for free)
+  - modify config settings
+  - ...
+
+What core server APIs are needed?
+
+download model
+  SSE
+
+send jsx
+  SSE return w/ abort signal ? long polling?
+  evaluate vs. execute
+  events
+    waiting
+    tool calls w/ parameters
+    thinking tokens
+    output tokens
+
+get, edit config
+  loaded tools, instructions, classifiers
+  allowed memory, thinking level
+  and so on
+
+possible endpoints:
+
+GET,PATCH /api/options
+
+GET /api/models => active models
+POST /api/models/:name // (download if not exist)
+PATCH /api/models/:name
+  instances: 0, 1, 2 ...
+
+GET /api/sessions
+POST /api/sessions
+  // new session
+POST /api/sessions/:id/turns
+  // new turn
