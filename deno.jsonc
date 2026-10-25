@@ -23,7 +23,8 @@
   },
   "name": "@cutout/agent",
   "tasks": {
-    "setup": "brew bundle"
+    "setup": "brew bundle",
+    "experimental:test": "deno run --env-file=.env.experimental -A ./experimental/e2e.ts"
   },
   "exports": {
     ".": "./app/run.ts",
@@ -35,6 +36,8 @@
     "@std/cli/spinner": "jsr:@std/cli/unstable-spinner",
     "@std/streams": "jsr:@std/streams",
     "@std/dotenv": "jsr:@std/dotenv",
+    "@std/path": "jsr:@std/path",
+    "@std/fmt": "jsr:@std/fmt",
     "@cutout/jsx": "jsr:@cutout/jsx"
   }
 }
