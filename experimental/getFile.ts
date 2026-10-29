@@ -1,16 +1,10 @@
 import { join } from "@std/path";
 import { format } from "@std/fmt/bytes";
-import { readEnv } from "../libraries/readEnv.ts";
 
-const OUTPUT_ROOT = readEnv(
-  "XO_AGENT_OUTPUT_ROOT",
-  /* default value */ ".output",
-);
+import { HF_TOKEN, OUTPUT_ROOT } from "../constants.env.ts";
 
-const OUTPUT_MODEL_CACHE_ROOT = join(OUTPUT_ROOT, "model");
-
-const HF_TOKEN = readEnv("XO_AGENT_HF_TOKEN", "");
-const HF_ENDPOINT = "https://huggingface.co";
+const OUTPUT_MODEL_CACHE_ROOT = join(OUTPUT_ROOT, "model"),
+  HF_ENDPOINT = "https://huggingface.co";
 
 export const getFile = async (
   modelRepoID: string,
@@ -43,28 +37,35 @@ export const getFile = async (
     // okay, fetch it then
   }
 
-  try {
-    const response = await fetch(
-      urlResolver(modelRepoID, filePath),
-      {
-        headers: authResolver(),
-      },
-    );
+  const response = await fetch(
+    urlResolver(modelRepoID, filePath),
+    {
+      headers: authResolver(),
+    },
+  );
 
-    return response.body!
-      .pipeThrough(
-        _logStreamProgress(
-          filePath,
-          Number(response.headers.get("content-length")),
-        ),
-      )
-      .pipeThrough(
-        _writeStreamData(localFileHandle),
-      );
-  } catch (cause) {
-    throw new Error("TODO: error message", { cause });
+  if (!response.ok) {
+    throw new Error(`"${filePath}" not found in "${modelRepoRoot}".`);
   }
+
+  return response.body!
+    .pipeThrough(
+      _logStreamProgress(
+        filePath,
+        Number(response.headers.get("content-length")),
+      ),
+    )
+    .pipeThrough(
+      _writeStreamData(localFileHandle),
+    );
 };
+
+const _log = (...messages: unknown[]) =>
+  Deno.stdout.writeSync(
+    new TextEncoder().encode(
+      messages.map(String).join(" "),
+    ),
+  );
 
 const _logStreamProgress = (fileName: string, totalBytes: number) => {
   let downloadedBytes = 0;
@@ -73,18 +74,16 @@ const _logStreamProgress = (fileName: string, totalBytes: number) => {
     transform(chunk, next) {
       downloadedBytes += chunk.length;
 
-      Deno.stdout.writeSync(
-        new TextEncoder().encode(
-          `\x1b[2K\rPROGRESS ${fileName} ${(totalBytes > 0
-            ? ((downloadedBytes / totalBytes) * 100).toFixed(2) + "%"
-            : format(downloadedBytes))}`,
-        ),
-      );
-
-      next.enqueue(chunk);
+      _log(
+        "\x1b[2K\rPROGRESS",
+        fileName,
+        totalBytes > 0
+          ? ((downloadedBytes / totalBytes) * 100).toFixed(2) + "%"
+          : format(downloadedBytes),
+      ), next.enqueue(chunk);
     },
     flush() {
-      console.log("\nDONE", fileName);
+      _log("\nDONE", fileName, "\n");
     },
   });
 };

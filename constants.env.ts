@@ -2,6 +2,9 @@ import { readEnv } from "./libraries/readEnv.ts";
 
 const AGENT_TAG = "XO_AGENT";
 
+export const OUTPUT_ROOT = readEnv(`${AGENT_TAG}_OUTPUT_ROOT`, ".output");
+export const HF_TOKEN = readEnv(`${AGENT_TAG}_HF_TOKEN`, "");
+
 let PREFIX = `${AGENT_TAG}_MODEL`;
 
 export const MODEL_AGENT = readEnv(

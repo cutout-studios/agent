@@ -1,5 +1,9 @@
-import { getFile } from "./getFile.ts";
+import { detokenize, tokenize } from "./tokens.ts";
 
-const flush = (stream: ReadableStream) => stream.pipeTo(new WritableStream());
+const tokens = await tokenize("my cool prompt");
 
-await flush(await getFile("Qwen/Qwen2.5-0.5B-Instruct", "model.safetensors"));
+console.log({ tokens });
+
+const message = await detokenize(tokens);
+
+console.log({ message });

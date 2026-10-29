@@ -1,25 +1,22 @@
-import { readEnv } from "../libraries/readEnv.ts";
 import type { Options } from "./types.ts";
 
-const DEFAULT_MODEL_ID = readEnv("XO_AGENT_MODEL_ID", "Qwen/Model-Name");
-
 import { tokenize, detokenize } from "./tokens.ts";
-// TODO: resolve default options throughout
+import { resolveOptionDefaults } from "./defaults.ts";
 
-export const generate = (
+export const generate = async (
   prompt: string,
   options: Options,
-): ReadableStream<string> => {
+): Promise<ReadableStream<string>> => {
   const {
-    model: { repository: { id: modelID = DEFAULT_MODEL_ID } },
-    session: { id: sessionID },
-  } = options;
+    model: { repository: { id: modelID } },
+    session: { id: sessionID } = {},
+  } = resolveOptionDefaults(options)
 
-  const tokens = tokenize(prompt, options),
+  const tokens = await tokenize(prompt, options),
     sessionCache = _upsertSession(modelID, sessionID);
 
   return new ReadableStream({
-    pull(stream) {
+    async pull(stream) {
       const predictedOptions = predict(tokens, sessionCache);
 
       const roll = Math.random();
@@ -34,7 +31,7 @@ export const generate = (
         chosenToken = predictedOptions[index];
       }
 
-      const result = detokenize(chosenToken, options);
+      const result = await detokenize(new Uint32Array([chosenToken]), options);
 
       stream.enqueue(result);
 
@@ -44,7 +41,7 @@ export const generate = (
 };
 
 export const predict = (
-  tokens: number[],
+  tokens: Uint32Array,
   sessionCache: GPUBuffer,
 ): number[] => {
   // TODO: actual render pass
@@ -60,4 +57,6 @@ const _upsertSession = (modelID: string, sessionID?: string): GPUBuffer => {
   // => find gpubuffer by session id, either
   // => in weakmap
   // => on disk
+
+  return new GPUBuffer();
 };

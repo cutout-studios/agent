@@ -1,5 +1,5 @@
 export type Options = {
-  session: {
+  session?: {
     id: string;
   };
   model: {
