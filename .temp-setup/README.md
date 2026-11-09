@@ -31,7 +31,7 @@ pipx install open-terminal
 open-terminal run --host 127.0.0.1 --port 8082 --api-key "[[TERMINAL PASSWORD]]"
 ```
 
-Finally open OpenUI and load the [config.json](./config.json),
+Finally open Open WebUI and load the [config.json](./config.json),
 [SYSTEM.md](./SYSTEM.md) into it.
 
 ## Setup-specific Issues
