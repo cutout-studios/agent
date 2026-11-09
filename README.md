@@ -1,8 +1,8 @@
-> [!WARNING]
+> [!CAUTION]
 > [Shockingly, Deno is suddenly being shut down.](https://deno.com/blog/cloudflare)
 > This effort is **paused** while we figure out what to do next.
 
-> [!INFO]
+> [!NOTE]
 > We were able to cobble together a local agent setup that addresses most of
 > Cutout's needs for now. It's far from perfect, though. See
 > [`.temp-setup`](./.temp-setup).
