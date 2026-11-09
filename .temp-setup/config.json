@@ -1,0 +1,17 @@
+{
+  "openai.enable": true,
+  "openai.api_base_urls": ["http://localhost:8080/v1"],
+  "terminal_server.connections": [
+    {
+      "name": "Terminal",
+      "enabled": true,
+      "url": "http://localhost:8082",
+      "path": "/openapi.json",
+      "key": "[[TERMINAL PASSWORD]]",
+      "auth_type": "bearer"
+    }
+  ],
+  "code_execution.enable": false,
+  "web.search.engine": "searxng",
+  "web.search.searxng_query_url": "http://localhost:8081/search"
+}

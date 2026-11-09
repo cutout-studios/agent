@@ -1,0 +1,14 @@
+use_default_settings: true
+
+server:
+  base_url: http://localhost:8081/
+
+search:
+  formats:
+    - html
+    - json
+
+botdetection:
+  ip_limit:
+    enabled: false
+                                                                                                                                                                                                                                                                               
