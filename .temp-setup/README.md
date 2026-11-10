@@ -5,12 +5,19 @@
 <img src="./example.png" width=320 />
 
 Not a robust solution; a series of commands that gets an agent running locally
-that's mostly functional. Instructions not guaranteed to work exactly as
-written.
+that's functional. Instructions not guaranteed to work exactly as written.
 
 ```sh
 cd .temp-setup
 brew bundle
+
+# start inference service
+POOLED_DEV=1 npx @pooled/cli pull "<pick a model - 3.8 flash preferred>"
+POOLED_DEV=1 npx @pooled/cli host --here --gb 80
+# => outputs a room key
+
+# separate tab to expose the actual api endpoint
+npx @pooled/cli serve "<room key>"
 
 # configure search
 mkdir -p `~/.search`
@@ -31,14 +38,8 @@ open-terminal run --host 127.0.0.1 --port 8082 --api-key "[[TERMINAL PASSWORD]]"
 Finally open Open WebUI and load the [config.json](./config.json),
 [SYSTEM.md](./SYSTEM.md) into it.
 
-Turn on the `llama.cpp` service and download the model most appropriate for your
-system's requirements.
-
 ## Setup-specific Issues
 
 - Policy is enforced at the start of each chat, not per-turn.
-- Interrupts are bad - long-running tool calls, previous thinking is not taken
-  into context when you interrupt the model to correct it.
 - Long-form prompting is not supported. Write out your longer prompts in a
   separate document before sending them.
-- Can't lazy-load MoEs.
