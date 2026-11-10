@@ -1,4 +1,3 @@
-brew "mlx-lm"
 brew "open-webui"
 brew "pipx"
 brew "podman"

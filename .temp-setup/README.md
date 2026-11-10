@@ -31,8 +31,14 @@ open-terminal run --host 127.0.0.1 --port 8082 --api-key "[[TERMINAL PASSWORD]]"
 Finally open Open WebUI and load the [config.json](./config.json),
 [SYSTEM.md](./SYSTEM.md) into it.
 
-Turn on the `llama.cpp` service and download the model most appropriate for your system's requirements.
+Turn on the `llama.cpp` service and download the model most appropriate for your
+system's requirements.
 
 ## Setup-specific Issues
 
-- Policy guidelines take 10-15m to establish.
+- Policy is enforced at the start of each chat, not per-turn.
+- Interrupts are bad - long-running tool calls, previous thinking is not taken
+  into context when you interrupt the model to correct it.
+- Long-form prompting is not supported. Write out your longer prompts in a
+  separate document before sending them.
+- Can't lazy-load MoEs.
