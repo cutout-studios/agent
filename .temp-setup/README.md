@@ -6,14 +6,11 @@
 
 Not a robust solution; a series of commands that gets an agent running locally
 that's mostly functional. Instructions not guaranteed to work exactly as
-written. You need at least 32GB of free RAM to run them.
+written.
 
 ```sh
 cd .temp-setup
 brew bundle
-
-# start model
-mlx_lm.server --model mlx-community/Qwen3.8-27B-4bit
 
 # configure search
 mkdir -p `~/.search`
@@ -34,8 +31,8 @@ open-terminal run --host 127.0.0.1 --port 8082 --api-key "[[TERMINAL PASSWORD]]"
 Finally open Open WebUI and load the [config.json](./config.json),
 [SYSTEM.md](./SYSTEM.md) into it.
 
+Turn on the `llama.cpp` service and download the model most appropriate for your system's requirements.
+
 ## Setup-specific Issues
 
 - Policy guidelines take 10-15m to establish.
-- Qwen gets caught in loops even with the repeat penalties turned all the way
-  up. You have to stop and restart the response manually when this happens.
